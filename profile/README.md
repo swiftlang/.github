@@ -7,5 +7,5 @@ Swift is a general-purpose programming language that’s approachable for newcom
 
 🚧 **Pardon Our Dust** 🚧
 
-While it may seem a bit empty at the moment, we are in the process of transferring repositories from their current locations. This staged migration helps minimize potential disruptions. For more information, check out our [forum post](https://forums.swift.org/t/new-github-organization-for-the-swift-project/72336).
+This organization is the new home for Swift, but we are still migrating Swift-related repositories from other organizations. For more information, check out our [forum post](https://forums.swift.org/t/new-github-organization-for-the-swift-project/72336).
 
