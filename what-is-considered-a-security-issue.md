@@ -2,9 +2,25 @@
 
 We define "security-sensitive" to mean that a discovered bug or vulnerability warrants coordinated, private disclosure — that is, it should be reported through a repository's GitHub private vulnerability reporting feature rather than filed as a public issue, and will be embargoed until a fix is generally available.
 
-**Guiding principle.** Swift aims to guarantee two things: (1) a program written in the safe subset of Swift — that is, without `unsafe`, `@unchecked`, or `Unsafe*` constructs and executed by the Swift runtime cannot corrupt memory, violate type safety, or violate the isolation guarantees of its concurrency model; and (2) Where SwiftPM applies a sandbox, a defect that allows the sandboxed code to escape those restrictions is security-sensitive. A defect that causes SwiftPM to accept dependency content that failed an integrity check it performed, or to skip a check it was configured to perform, is security-sensitive. A bug is security-sensitive when it would let a user who has done nothing unsafe — no unsafe code, no deliberate compilation of untrusted source, no bypassed integrity check — lose one of these guarantees.
+**Guiding principle.** Swift aims to guarantee two things:
 
-The Swift project spans a compiler, a language runtime, a standard library, package tooling, and IDE/editor infrastructure, each with its own threat model and its own untrusted-input surface. Not everything that could theoretically be misused is something the project has committed to maintaining securely. This section scopes that out per component so that reporters and maintainers agree on what belongs in a private report versus a public issue.
+1. **Safe Swift is memory safe.** A program written in the safe subset of Swift cannot do any of the following:
+   * Corrupt memory.
+   * Violate type safety.
+   * Violate the isolation guarantees of the concurrency model.
+
+   "Safe subset" means the program uses no `unsafe`, `@unchecked`, or `Unsafe*` constructs, and runs on the Swift runtime.
+2. **SwiftPM enforces the protections it offers.**
+   * Where SwiftPM applies a sandbox, code that escapes the sandbox is security-sensitive.
+   * If SwiftPM accepts dependency content that failed an integrity check, that is security-sensitive.
+   * If SwiftPM skips an integrity check it was configured to perform, that is security-sensitive.
+
+A bug is security-sensitive when a user who has done nothing unsafe loses one of these guarantees. "Nothing unsafe" means:
+* No unsafe code.
+* No deliberate compilation of untrusted source.
+* No bypassed integrity check.
+
+The Swift project spans a compiler, a language runtime, a standard library, package tooling, and IDE/editor infrastructure, each with its own threat model and its own untrusted-input surface. Not everything that could theoretically be misused is a security issue. This section scopes that out per component so that reporters and maintainers agree on what belongs in a private report versus a public issue.
 
 ### Security-sensitive
 
@@ -21,6 +37,6 @@ The Swift project spans a compiler, a language runtime, a standard library, pack
 * `unsafe` APIs used incorrectly, such as `UnsafePointer`, `UnsafeMutableRawPointer`, `Unmanaged`, and `@unchecked Sendable`. These carry the same contract as C: misuse is undefined behavior, not a Swift vulnerability, unless documentation explicitly promises hardening against that misuse.
 * SourceKit, SourceKit-LSP, and swift-driver operating on untrusted source or command-line input, for the same reason as the compiler frontend.
 * Sanitizer- and debug-only tooling (for example, ASan/TSan/UBSan integration and debug-only assertions), since these are not meant to be included in production binaries.
-* Reflection and introspection tooling (for example, swift-inspect) used to examine an adversarial target process, unless a specific API is documented as safe for that use.
+* Developer tooling such as `swift-inspect` used to examine an adversarial target process, which is treated like the compiler frontend, unless a specific API is documented as safe for that use.
 
 Both lists are expected to change over time. If you are not sure whether something is in scope, err toward reporting it privately anyway — a maintainer can downgrade a private report to a public issue, but not the reverse, and the outcome of your report may be used to update this document.
