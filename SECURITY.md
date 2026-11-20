@@ -26,3 +26,5 @@ Some projects have additional security pages with further details or aggregated 
 
 Output from automated security scans or fuzzers must include additional context demonstrating the vulnerability with a proof of concept or working exploit.
 Please include enough information to allow us to reproduce the issue. We will credit you in the public advisory if the report is accepted.
+
+[What is considered a security issue in the Swift project?](what-is-considered-a-security-issue.md)
